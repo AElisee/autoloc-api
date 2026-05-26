@@ -18,8 +18,9 @@ export class UsersService {
     const users = await this.userRepository.find();
 
     return users.map((user) => {
-      const { password, ...result } = user;
-      return result;
+      // const { password, ...result } = user;
+      // return result;
+      return this.excludePassword(user);
     });
   }
 
@@ -33,8 +34,7 @@ export class UsersService {
       throw new BadRequestException('Utilisateur non trouvé !');
     }
 
-    const { password, ...result } = user;
-    return result;
+    return this.excludePassword(user);
   }
 
   // POST
@@ -56,8 +56,7 @@ export class UsersService {
 
     const savedUser = await this.userRepository.save(newUser);
 
-    const { password, ...result } = savedUser;
-    return result;
+    return this.excludePassword(savedUser);
   }
 
   // UPDATE
@@ -75,9 +74,7 @@ export class UsersService {
 
     const updatedUser = await this.userRepository.save(user);
 
-    const { password, ...result } = updatedUser;
-
-    return result;
+    return this.excludePassword(updatedUser);
   }
 
   // DELETE
@@ -95,5 +92,10 @@ export class UsersService {
     return {
       message: 'Utilisteur supprimé !',
     };
+  }
+
+  private excludePassword(user: User) {
+    const { password, ...result } = user;
+    return result;
   }
 }
