@@ -1,6 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { Company } from '../../companies/entities/company.entity';
+import { Booking } from 'src/bookings/entities/booking.entity';
 
 @Entity('cars')
 export class Car {
@@ -23,4 +30,7 @@ export class Car {
 
   @ManyToOne(() => Company, (company) => company.cars)
   company: Company;
+
+  @OneToMany(() => Booking, (booking) => booking.car)
+  bookings: Booking[];
 }
