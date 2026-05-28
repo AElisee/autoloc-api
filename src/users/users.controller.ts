@@ -16,6 +16,8 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import type { Request } from 'express';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -24,7 +26,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Req() request: Request) {
-    console.log(request.user);
+    console.log(request.user); // recupère les users connecter, au lieu de @Req on utilisera @CurrentUser()
 
     return this.usersService.findAll();
   }
@@ -48,6 +50,8 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Delete(':id')
   revove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
